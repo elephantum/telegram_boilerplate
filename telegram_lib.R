@@ -70,7 +70,8 @@ tgprint <- function(){
                    "getUserProfilePhotos",
                    "getUpdates",
                    "setWebhook",
-                   "getFile")
+                   "getFile",
+                   "editMessageReplyMarkup")
   dont_show <- c("clone", "initialize", "print")
   avail_methods <- sort(api_methods[api_methods %in% obj])
   remaining_methods <- sort(obj[! obj %in% avail_methods])
@@ -585,7 +586,8 @@ TGBot <- R6::R6Class("TGBot",
                        sendSticker          = sendSticker,
                        sendVideo            = sendVideo,
                        sendVoice            = sendVoice,
-                       setWebhook           = setWebhook
+                       setWebhook           = setWebhook,
+                       editMessageReplyMarkup = editMessageReplyMarkup
                      ),
                      private = list(
                        ## ---------------------
@@ -605,3 +607,32 @@ TGBot <- R6::R6Class("TGBot",
                        check_chat_id = check_chat_id
                      )
 )
+
+editMessageReplyMarkup <- function(
+                                   message_id = NULL,
+                                   chat_id = NULL,
+                                   inline_message_id = NULL,
+                                   reply_markup = NULL
+                                  )
+{
+  ## params
+  if (inline_message_id == NULL) {
+    chat_id <- private$check_chat_id(chat_id = chat_id)
+    message_id <- check_param(message_id, 'int')
+  } else {
+    inline_message_id <- check_param(inline_message_id, 'int')
+  }
+
+  reply_markup <- check_param(reply_markup, 'char')
+
+  ## request body
+  body <- make_body(
+                    'message_id' = message_id,
+                    'chat_id' = chat_id,
+                    'inline_message_id' = inline_message_id,
+                    'reply_markup' = reply_markup)
+  ## request
+  r <- private$request('editMessageReplyMarkup', body = body)
+  ## response handling
+  invisible(r)
+}
