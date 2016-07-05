@@ -43,3 +43,31 @@ bot$sendMessage (text='Это тестовое сообщение',
 
 offset <- NULL
 updates <- bot$getUpdates(offset=offset)
+
+bot$editMessageReplyMarkup( 
+                           message_id = updates$callback_query$message$message_id,
+                           chat_id = default_chat_id,
+                           reply_markup='{
+                           "inline_keyboard": [
+                                     [
+                                     {
+                                     "text": "Changed button text 1",
+                                     "callback_data": "1"
+                                     }
+                                     ],
+                                     [
+                                     {
+                                     "text": "Some button text 2",
+                                     "callback_data": "2"
+                                     }
+                                     ],
+                                     [
+                                     {
+                                     "text": "Some button text 3",
+                                     "callback_data": "3"
+                                     }
+                                     ]
+                                     ]
+                                     }')
+
+
